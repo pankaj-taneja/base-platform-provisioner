@@ -1,0 +1,13 @@
+# This file should contain github repos versions used for elasticsearch stack
+
+- src: https://github.com/pankaj-taneja/ansible-role-elasticsearch
+  version: master
+  name: ansible-role-elasticsearch
+
+- src: https://github.com/pankaj-taneja/ansible-role-elasticsearch-curator
+  version: master
+  name: ansible-role-elasticsearch-curator
+
+- src: https://github.com/pankaj-taneja/ansible-role-kibana
+  version: master
+  name: ansible-role-kibana
