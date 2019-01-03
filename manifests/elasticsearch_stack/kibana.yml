@@ -1,0 +1,5 @@
+# Manifest file for kibana ansible roles repos
+
+- src: https://github.com/pankaj-taneja/ansible-role-kibana
+  version: master
+  name: ansible-role-kibana

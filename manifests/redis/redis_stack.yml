@@ -1,0 +1,6 @@
+# This file should contain github repos versions used for redis stack
+
+- include: manifests/scaffold/scaffold.yml
+
+- include: manifests/redis/redis.yml
+

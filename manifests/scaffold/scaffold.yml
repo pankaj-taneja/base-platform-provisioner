@@ -1,0 +1,6 @@
+# Manifest file for scaffold ansible roles repos
+
+- src: https://github.com/pankaj-taneja/ansible-role-scaffold
+  version: master
+  name: ansible-role-scaffold
+

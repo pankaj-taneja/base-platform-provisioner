@@ -1,10 +1,5 @@
-# This file should contain github repos versions used for elasticsearch stack
-
-- src: https://github.com/pankaj-taneja/ansible-role-scaffold
-  version: master
-  name: ansible-role-scaffold
+# Manifest file for redis ansible roles repos
 
 - src: https://github.com/pankaj-taneja/ansible-role-redis
   version: master
   name: ansible-role-redis
-

@@ -1,4 +1,9 @@
+- include: manifests/scaffold/scaffold.yml
 
-- include: manifests/elasticsearch_stack/es-kibana-curator.yml
+- include: manifests/elasticsearch_stack/elasticsearch.yml
+
+- include: manifests/elasticsearch_stack/curator.yml
+
+- include: manifests/elasticsearch_stack/kibana.yml
 
 - include: manifests/redis/redis.yml

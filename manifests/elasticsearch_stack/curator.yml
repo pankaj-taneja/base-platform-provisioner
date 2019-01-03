@@ -1,0 +1,5 @@
+# Manifest file for curator ansible roles repos
+
+- src: https://github.com/pankaj-taneja/ansible-role-elasticsearch-curator
+  version: master
+  name: ansible-role-elasticsearch-curator
