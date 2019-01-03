@@ -1,5 +1,5 @@
 ---
 
-elasticsearch_host: 'localhost'
+elasticsearch__ip: 'devops002-pankaj-mst-01.gvs.ggn'
 
-elasticsearch_port: '9200'
+elasticsearch__port: '9200'
