@@ -1,0 +1,2 @@
+# This file should contain all those variable whose default values needs to overwrite
+# extra_vars/all.yml file to be used using --extra_vars @inventory/extra_vars/all.yml argument
