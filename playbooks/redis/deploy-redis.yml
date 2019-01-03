@@ -1,0 +1,5 @@
+---
+
+- import_playbook: ../all/scaffold/main.yml
+
+- import_playbook: ../all/redis/deploy.yml

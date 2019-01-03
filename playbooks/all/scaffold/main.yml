@@ -1,0 +1,196 @@
+---
+
+- name: Retrieve facts all host
+  hosts:
+    - all
+  gather_facts: true
+  any_errors_fatal: True
+  tags:
+    - 'always'
+  tasks: []
+
+- name: Populating /etc/hosts
+  hosts:
+    - all
+  any_errors_fatal: True
+  tasks:
+    - name:
+        Localhost ipv4 in hosts file
+      lineinfile:
+        dest: /etc/hosts
+        line: "127.0.0.1 localhost localhost.localdomain"
+        regexp: '^127.0.0.1.*$'
+        state: present
+        create: yes
+        backup: yes
+    - name:
+        Localhost ipv6 in hosts file
+      lineinfile:
+        dest: /etc/hosts
+        line: "::1 localhost6 localhost6.localdomain"
+        regexp: '^::1.*$'
+        state: present
+        create: yes
+        backup: yes
+    - name:
+        Populate LB vip hostname into hosts file
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ site_floating_ip.ip }} {{ site_floating_ip.fqdn }} {{ site_floating_ip.fqdn.split('.') | first }}"
+        regexp: '^{{ site_floating_ip.ip }}.*$'
+        state: present
+        create: yes
+        backup: yes
+      when: site_deployment_type == 'HA'
+    - name:
+        Populate inventory into hosts file
+      blockinfile:
+        dest: /etc/hosts
+        block: |
+          {% for item in groups['all'] %}
+          {{ hostvars[item]['access_ip'] | default(hostvars[item]['ip'] | default(hostvars[item].ansible_default_ipv4.address)) }} {{ item }}{% if (item != hostvars[item]['ansible_hostname']) %} {{ hostvars[item]['ansible_hostname'] }}{% endif %}
+          {% endfor %}
+        state: present
+        create: yes
+        backup: yes
+        marker: "# Ansible inventory hosts {mark}"
+
+- name: Stop firewalld service
+  hosts:
+    - all
+  gather_facts: false
+  any_errors_fatal: True
+  tasks:
+    - name: 'Stop firewalld service'
+      service:
+        name:  firewalld
+        enabled: no
+        state: stopped
+      register: firewalld_sysd_result
+      failed_when: "firewalld_sysd_result|failed and ('find' not in firewalld_sysd_result.msg)"
+  tags: ['firewalld_sysd_stop']
+
+
+- name: Disable selinux
+  hosts:
+    - all
+  any_errors_fatal: True
+  tasks:
+    - name:
+        'Disable selinux'
+      selinux:
+        state: disabled
+
+- name: Sys tuning all
+  hosts:
+    - all
+  any_errors_fatal: True
+  roles:
+    - ansible-role-scaffold/manage-thp
+    - ansible-role-scaffold/manage-sysctl
+
+- name: Limits tuning
+  hosts:
+    - all
+  any_errors_fatal: True
+  roles:
+    - ansible-role-scaffold/manage-limits
+
+- name: Sudo tuning
+  hosts:
+    - all
+  any_errors_fatal: True
+  tasks:
+    - name: Passwordless 'wheel' group
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        #validate: 'visudo -cf %s'
+
+- name: Create Groups
+  hosts:
+    - all
+  any_errors_fatal: True
+  vars:
+    groups_list: '{{ gvs_groups | default(omit) }}'
+  roles:
+    - ansible-role-scaffold/groups
+
+- name: Create Users
+  hosts:
+    - all
+  any_errors_fatal: True
+  vars:
+    users_list: '{{ gvs_users | default(omit) }}'
+  roles:
+    - ansible-role-scaffold/users
+
+#- name: Delete previous repositories
+#  hosts:
+#    - all
+#  any_errors_fatal: True
+#  tasks:
+#    - name: Find previous configured repositories
+#      find:
+#        paths: "/etc/yum.repos.d/"
+#        patterns: "[!gvs]*.repo"
+#      register: result_files_to_delete
+#      when:
+#        - reflex_yum_repositories is defined
+#        - reflex_yum_repositories | length > 0
+#        - common_yum_repositories is defined
+#        - common_yum_repositories | length > 0
+#        - install_using_public_repos == 'false'
+#    - name: Delete previous configured repositories
+#      file:
+#        path: "{{item.path}}"
+#        state: absent
+#      with_items: "{{ result_files_to_delete.files|default }}"
+#      when:
+#        - reflex_yum_repositories is defined
+#        - reflex_yum_repositories | length > 0
+#        - common_yum_repositories is defined
+#        - common_yum_repositories | length > 0
+#        - install_using_public_repos == 'false'
+#  tags:
+#    - yum_repos
+
+- name: Setup yum repos
+  hosts:
+    - all
+  any_errors_fatal: True
+  roles:
+    - { role: ansible-role-scaffold/yum_repos, yum_repos_repositories: "{{ reflex_yum_repositories }}" }
+  tags:
+    - yum_repos
+
+- name: Install Packages
+  hosts:
+    - all
+  any_errors_fatal: True
+  tasks:
+    - name: 'Install base packages'
+      package:
+        name: '{{ item }}'
+        state: present
+      retries: 4
+      delay: "{{ retry_stagger | random + 3 }}"
+      with_items:
+        "{{ rpm_base_packages }}"
+
+#- name: Configure timezone
+#  hosts:
+#    - all
+#  any_errors_fatal: True
+#  roles:
+#    - ansible-role-scaffold/timezone
+
+- name: Config PIP Client
+  hosts:
+    - all
+  any_errors_fatal: True
+  roles:
+    - ansible-role-scaffold/pip_client
+  tags: ['pip_client']

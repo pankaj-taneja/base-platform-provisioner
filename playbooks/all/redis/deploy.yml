@@ -1,0 +1,15 @@
+---
+
+- name: Retrieve facts all host
+  hosts:
+    - all
+  gather_facts: true
+  any_errors_fatal: True
+  tags:
+    - 'always'
+  tasks: []
+
+- name: install redis
+  hosts: redis-nodes
+  roles:
+    - ansible-role-redis

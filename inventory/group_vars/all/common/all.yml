@@ -1,0 +1,12 @@
+---
+
+site_deployment_type: 'HA'
+
+site_default_rpm_repo_host: "artifacts.ggn.in.guavus.com:80"
+
+site_floating_ip:
+  is_internal: 'yes'
+  ip:   "192.168.133.155"
+  fqdn: "devops002-pankaj-lb-vip.gvs.ggn"
+  cidr: "22"
+  inet: "ens3"

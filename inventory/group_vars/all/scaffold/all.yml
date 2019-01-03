@@ -1,0 +1,88 @@
+---
+
+gvs_groups:
+  - name: gvsadmin
+    gid: 600
+
+gvs_users:
+  - name: gvsadmin
+    uid: '600'
+    group: 'gvsadmin'
+    password: '$1$Kflk9wOS$zyRGlOKitAbqnQhK4jhl90'
+    groups: 'gvsadmin,wheel'
+    createhome: 'true'
+    shell: '/bin/bash'
+    home : '/home/gvsadmin'
+
+reflex_yum_repositories:
+  - name: base
+    state: present
+    description: CentOS-7 - Base
+    baseurl: 'http://{{ site_default_rpm_repo_host }}/centos-7-snapshots/7/3/20170612/os/x86_64/'
+    gpgcheck: 0
+    file: gvs-CentOS
+  - name: scl
+    state: present
+    description: CentOS-7 - SCL
+    baseurl: 'http://{{ site_default_rpm_repo_host }}/centos-7-snapshots/7/3/20170612/sclo/x86_64/rh/'
+    enabled: 1
+    gpgcheck: 0
+    file: gvs-CentOS
+  - name: updates
+    state: present
+    description: CentOS-7 - Updates
+    baseurl: 'http://{{ site_default_rpm_repo_host }}/centos-7-snapshots/7/3/20170612/updates/x86_64/'
+    gpgcheck: 0
+    file: gvs-CentOS
+  - name: epel
+    state: present
+    description: Extra Packages for Enterprise Linux 7 - $basearch
+    baseurl: 'http://{{ site_default_rpm_repo_host }}/epel-7-snapshots/7/20170418/x86_64/'
+    enabled: 1
+    gpgcheck: 0
+    file: gvs-epel
+  - name: zabbix
+    state: present
+    description: Zabbix repository for Centos7 - $basearch
+    baseurl: 'http://{{ site_default_rpm_repo_host }}/zabbix-centos-7-snapshot/7/20170419/'
+    enabled: 1
+    gpgcheck: 0
+    file: gvs-zabbix
+
+rpm_base_packages:
+  - python-pip
+  - emacs-nox
+  - bind-utils
+  - dos2unix
+  - dstat
+  - iotop
+  - iftop
+  - mlocate
+  - rsync
+  - screen
+  - tmux
+  - strace
+  - sysstat
+  - tcpdump
+  - telnet
+  - tmpwatch
+  - unzip
+  - vim-enhanced
+  - wget
+  - bash-completion
+  - zsh
+  - net-tools
+  - yum-utils
+  - curl
+  - nmap
+  - tree
+  - tuned
+  - htop
+  - mtr
+  - python34
+  - jq
+  - lsof
+  - cyrus-sasl-devel
+  - python-psycopg2
+
+retry_stagger: 6
