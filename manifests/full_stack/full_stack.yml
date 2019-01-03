@@ -1,0 +1,4 @@
+
+- include: manifests/elasticsearch_stack/es-kibana-curator.yml
+
+- include: manifests/redis/redis.yml

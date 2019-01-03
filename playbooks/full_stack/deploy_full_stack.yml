@@ -1,0 +1,11 @@
+---
+
+- import_playbook: ../all/scaffold/main.yml
+
+- import_playbook: ../all/elasticsearch/deploy.yml
+
+- import_playbook: ../all/curator/deploy.yml
+
+- import_playbook: ../all/kibana/deploy.yml
+
+- import_playbook: ../all/redis/deploy.yml
