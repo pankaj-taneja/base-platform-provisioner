@@ -1,7 +1,7 @@
 ---
 
 # This file should contain all those variable whose default values needs to overwrite
-# extra_vars/all.yml file to be used using --extra_vars @inventory/extra_vars/all.yml argument
+# extra_vars/all.yml file to be used using --extra_vars @extra_vars/all.yml argument
 
 
 elasticsearch__ip: 'devops002-pankaj-mst-02.gvs.ggn'
