@@ -289,6 +289,26 @@ elasticsearch__ip: 'devops002-pankaj-mst-01.gvs.ggn'
 elasticsearch__port: '9200'
 ```
 Inventory group_vars creation best practices documented in [Ansible Guideline](https://guavus.atlassian.net/wiki/spaces/BPL/pages/279117907/Ansible+Guideline)
+
+### Extra Vars
+extra_vars file kept at extra_vars/all.yml to be used to overwrite default values of variables used in ansible roles. 
+#### Example extra vars yaml file
+```
+# cat extra_vars/all.yml
+---
+
+# This file should contain all those variable whose default values needs to overwrite
+# extra_vars/all.yml file to be used using --extra_vars @extra_vars/all.yml argument
+
+
+elasticsearch__ip: 'devops002-pankaj-mst-02.gvs.ggn'
+
+elasticsearch__port: '9201'
+```
+### Example ansible-playbook command
+```
+# ansible-playbook -i inventory/ playbooks/full_stack/deploy_full_stack.yml -k -e "@extra_vars/all.yml"
+```
 ## Roles
 A separate ansible role to be maintained for each components and can be used in different stacks.
 ### Example ansible role
