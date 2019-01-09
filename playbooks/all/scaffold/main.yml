@@ -194,3 +194,10 @@
   roles:
     - ansible-role-scaffold/pip_client
   tags: ['pip_client']
+
+- name: Install Java
+  hosts:
+    - all
+  any_errors_fatal: True
+  roles:
+    - ansible-role-scaffold/java
